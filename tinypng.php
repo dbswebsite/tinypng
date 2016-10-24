@@ -2,7 +2,7 @@
 /**
 * @file tinypng.php
 *
-* @version 1.0
+* @version 1.1
 *
 * A script that uses the TinyPNG.com API (free to a point), to compress png
 * files via command line scripting. Based on example code from TinyPNG.com.
@@ -36,13 +36,13 @@ $input = $output = $file;
 
 // mostly from tinypng.com example API code: 
 $request = curl_init();
-curl_setopt_array($request, array(
+curl_setopt_array( $request, array(
 	CURLOPT_URL => "https://api.tinypng.com/shrink",
 	CURLOPT_USERPWD => "api:" . $key,
 	CURLOPT_POSTFIELDS => file_get_contents($input),
 	CURLOPT_BINARYTRANSFER => true,
 	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_HEADER => true,
+	CURLOPT_HEADER => false,
 	/* Uncomment below if you have trouble validating our SSL certificate.
 		 Download cacert.pem from: http://curl.haxx.se/ca/cacert.pem */
 	// CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
@@ -52,7 +52,7 @@ curl_setopt_array($request, array(
 $response = curl_exec($request);
 
 // for verbose output, @dbsinteractive
-$results = json_decode( preg_replace('/HTTP(.*)json/s',"",$response) );
+$results = json_decode( $response );
 $input_size = $results->input->size;
 $output_size = $results->output->size;
 $percent = 100 - $results->output->ratio * 100 . "%";
